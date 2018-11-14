@@ -1,5 +1,6 @@
 clear;
 
+
 a0 = 1;
 a1 = 1;
 b = 8;
@@ -28,24 +29,28 @@ sim('simu');
 figure;
 hold on;
 grid on;
-title('Wykres rozwiązania swobodnego, wymuszonego i ogólnego dla x(t)');
+%title('Wykres rozwiązania swobodnego, wymuszonego i ogólnego dla x(t)');
 xlabel('t [s]');
 ylabel('x(t)'); 
+set(gca, 'FontSize',17);
 
-plot(t,x)
-plot(t,xs,':')
-plot(t,xw)
+plot(t,x,'LineWidth',3)
+plot(t,xs,'LineWidth',3)
+plot(t,xw,':', 'LineWidth',3)
 legend('Rozwiązanie ogólne','Rozwiązanie swobodne','Rozwiązanie wymuszone','Location','southeast')
+saveas(gcf,'Fig1.png');
 
 figure;
 hold on;
 grid on;
-title('Wykres rozwiązania ogólnego - Simulink')
+%title('Wykres rozwiązania ogólnego - Simulink')
 xlabel('t [s]');
 ylabel('x(t)');
+set(gca, 'FontSize',17);
 
-plot(simt,simx);
+plot(simt,simx,'LineWidth',3);
 legend('Rozwiązanie ogólne', 'Location','southeast');
+saveas(gcf,'Fig1Simu.png');
 
 %%%%%%%%%% 2
 x0 = (b * u0 - a1 * k5 - a1 * a0)/a0;
@@ -60,24 +65,28 @@ sim('simu');
 figure;
 hold on;
 grid on;
-title('Wykres rozwiązania swobodnego, wymuszonego i ogólnego dla x(t)');
+%title('Wykres rozwiązania swobodnego, wymuszonego i ogólnego dla x(t)');
 xlabel('t [s]');
 ylabel('x(t)'); 
+set(gca, 'FontSize',17);
 
-plot(t,x)
-plot(t,xs)
-plot(t,xw)
+plot(t,x,'LineWidth',3)
+plot(t,xs,'LineWidth',3)
+plot(t,xw,'LineWidth',3)
 legend('Rozwiązanie ogólne','Rozwiązanie swobodne','Rozwiązanie wymuszone','Location','southeast')
+saveas(gcf,'Fig2.png');
 
 figure;
 hold on;
 grid on;
-title('Wykres rozwiązania ogólnego - Simulink')
+%title('Wykres rozwiązania ogólnego - Simulink')
 xlabel('t [s]');
 ylabel('x(t)');
+set(gca, 'FontSize',17);
 
-plot(simt,simx);
+plot(simt,simx,'LineWidth',3);
 legend('Rozwiązanie ogólne', 'Location','southeast');
+saveas(gcf,'Fig2Simu.png');
 
 %%%%%%%%%% 3
 
@@ -93,24 +102,28 @@ sim('simu');
 figure;
 hold on;
 grid on;
-title('Wykres rozwiązania swobodnego, wymuszonego i ogólnego dla x(t)');
+%title('Wykres rozwiązania swobodnego, wymuszonego i ogólnego dla x(t)');
 xlabel('t [s]');
 ylabel('x(t)'); 
+set(gca, 'FontSize',17);
 
-plot(t,x)
-plot(t,xs)
-plot(t,xw)
+plot(t,x,'LineWidth',3)
+plot(t,xs,'LineWidth',3)
+plot(t,xw,'LineWidth',3)
 legend('Rozwiązanie ogólne','Rozwiązanie swobodne','Rozwiązanie wymuszone','Location','southeast')
+saveas(gcf,'Fig3.png');
 
 figure;
 hold on;
 grid on;
-title('Wykres rozwiązania ogólnego - Simulink')
+%title('Wykres rozwiązania ogólnego - Simulink')
 xlabel('t [s]');
 ylabel('x(t)');
+set(gca, 'FontSize',17);
 
-plot(simt,simx);
+plot(simt,simx,'LineWidth',3);
 legend('Rozwiązanie ogólne', 'Location','southeast');
+saveas(gcf,'Fig3Simu.png');
 
 %%%%%%%%%% 4
 
@@ -126,24 +139,28 @@ sim('simu');
 figure;
 hold on;
 grid on;
-title('Wykres rozwiązania swobodnego, wymuszonego i ogólnego dla x(t)');
+%title('Wykres rozwiązania swobodnego, wymuszonego i ogólnego dla x(t)');
 xlabel('t [s]');
 ylabel('x(t)'); 
+set(gca, 'FontSize',17);
 
-plot(t,x)
-plot(t,xs)
-plot(t,xw)
+plot(t,x,'LineWidth',3)
+plot(t,xs,'LineWidth',3)
+plot(t,xw,'LineWidth',3)
 legend('Rozwiązanie ogólne','Rozwiązanie swobodne','Rozwiązanie wymuszone','Location','southeast')
+saveas(gcf,'Fig4.png');
 
 figure;
 hold on;
 grid on;
-title('Wykres rozwiązania ogólnego x(t) - Simulink')
+%title('Wykres rozwiązania ogólnego x(t) - Simulink')
 xlabel('t [s]');
 ylabel('x(t)');
+set(gca, 'FontSize',17);
 
-plot(simt,simx);
+plot(simt,simx,'LineWidth',3);
 legend('Rozwiązanie ogólne', 'Location','southeast');
+saveas(gcf,'Fig4Simu.png');
 
 
 
