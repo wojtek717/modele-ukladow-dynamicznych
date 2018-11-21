@@ -1,4 +1,4 @@
-clear;
+clear; close; clc;
 
 k1 = 1;
 k2 = 1;

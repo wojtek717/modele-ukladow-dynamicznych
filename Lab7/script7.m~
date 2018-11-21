@@ -1,0 +1,15 @@
+clear; close; clc;
+
+
+A1 = 1;
+A2 = 1;
+
+Aw1 = A1 * 0.1;
+Aw2 = A2 * 0.2;
+
+h1max = 6;
+h2max = 3;
+
+g = 9.81;
+
+fwe1max = Aw1 * sqrt(2 *
