@@ -1,3 +1,5 @@
+clear; clc;
+
 %% ===== Czesc I =====
 % Wartosci indeksu:
 I1 = 2;
@@ -40,10 +42,12 @@ Tkz0 = TkzN;        %Poczatkowa temperatura dostarczanego powietrza
 Tg0 = TgN;          %Poczatkowa temperatura gruntu
 fp0 = fp;
 
+Cp0 = cpp * rop * fp0;
+
 %% --------------------------
 % Stan równowagi:
 %Temperatura rownowagi wnetrza
-Twew0 = (Cp * Tkz0 + k1 * Tzew0 + k2 * kp * Tg0 / (k2 + kp)) / (Cp + k1 + kp - kp * kp / (k2 + kp));
+Twew0 = (Cp0 * Tkz0 + k1 * Tzew0 + k2 * kp * Tg0 / (k2 + kp)) / (Cp0 + k1 + kp - kp * kp / (k2 + kp));
 %Temperatura rownowagi piwnicy
 Tp0   = (kp * Twew0 + k2 * Tg0) / (k2 + kp);
 
@@ -51,8 +55,8 @@ Tp0   = (kp * Twew0 + k2 * Tg0) / (k2 + kp);
 % Ustawienia zaklocen:
 dt = 200;           %Czas wystapienia zaklocen
 
-dTzew = -10;        %Zaklocenie temperatury zewnetrznej
-dTg = -5;           %Zaklocenie temperatury gruntu
+dTzew = 0;          %Zaklocenie temperatury zewnetrznej
+dTg = 0;            %Zaklocenie temperatury gruntu
 dTkz = 0;           %Zaklocenie temperatury dostarczanego powietrza
 dfp = 0;            %Zaklocenie przeplywu powietrza
 
