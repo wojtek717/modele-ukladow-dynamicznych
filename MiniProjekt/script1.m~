@@ -1,7 +1,17 @@
+clear; clc;
+
 %% ===== Czesc I =====
 % Wartosci indeksu:
 I1 = 2;
 I2 = 4;
+
+%% --------------------------
+% Wartosci wejsciowe:
+% Tzew, Tg, Tkz, fp
+
+% Wartosci wyjsciowe:
+% Twew, Tp
+
 
 %% --------------------------
 % Wartości nominalne:
@@ -23,9 +33,13 @@ fkN = 20 * 1000;    %Strumien ciepla [W]
 fp = fkN/(cpp * rop * (TkzN - TwewN));
 Cp = cpp * rop * fp;
 
-k1 = (Cp * TkzN - Cp * TwewN) / ((TwewN - TzewN) + 1/4 * (TpN - TgN));
-k2 = 1/4 * k1;
-kp = 1/4 * k1 * (TpN - TgN) / (TwewN - TpN);
+%k1 = (Cp * TkzN - Cp * TwewN) / ((TwewN - TzewN) + 1/4 * (TpN - TgN));
+%k2 = 1/4 * k1;
+%kp = 1/4 * k1 * (TpN - TgN) / (TwewN - TpN);
+
+kp  = Pr * Cp * Rp * FkN * (TkzN - TwewN) / (TwewN - TpN);
+k1  = (cpp * rop * fp * (TkzN - TwewN) - kp * (TwewN - TpN)) / (TwewN - TzewN);
+k2  = kp * (TwewN - TpN) / (TpN - TgN);
 
 %% --------------------------
 % Parametry dynamiczne:
@@ -40,25 +54,43 @@ Tkz0 = TkzN;        %Poczatkowa temperatura dostarczanego powietrza
 Tg0 = TgN;          %Poczatkowa temperatura gruntu
 fp0 = fp;
 
+Cp0 = cpp * rop * fp0;
+
 %% --------------------------
 % Stan równowagi:
 %Temperatura rownowagi wnetrza
-kisTwew0 = (Cp * Tkz0 + k1 * Tzew0 + k2 * kp * Tg0 / (k2 + kp)) / (Cp + k1 + kp - kp * kp / (k2 + kp));
+Twew0 = (Cp0 * Tkz0 + k1 * Tzew0 + k2 * kp * Tg0 / (k2 + kp)) / (Cp0 + k1 + kp - kp * kp / (k2 + kp));
 %Temperatura rownowagi piwnicy
 Tp0   = (kp * Twew0 + k2 * Tg0) / (k2 + kp);
 
+%% ==== TRANSMITANCJA ====
+% Wartosci parametrow:
+M = [CVw * CVp, CVw*kp + CVw*k2 + Cp0*CVp + CVp*k1 + CVp*kp, (kp+k2)*(Cp0) + k1*kp + k1*k2 + kp*k2];
+
+%Pokoj
+L11 = [Cp0*CVp, Cp0*(kp+k2)];   %Tkz
+L12 = [CVp*k1, k1*(k2+kp)];     %Tzew
+L13 = [k2*kp];               %Tg
+
+%Piwnica
+L21 = [Cp0*kp];              %Tkz
+L22 = [k1*kp];               %Tzew
+L23 = [CVw*k2, k2*(Cp0+k1+k2)]; %Tg
+
+
 %% ==== SYMULACJA ====
 % Ustawienia zaklocen:
-dt = 200;          %Czas wystapienia zaklocen
+dt = 200;           %Czas wystapienia zaklocen
 
-dTzew = -10;        %Zaklocenie temperatury zewnetrznej
-dTg = -5;           %Zaklocenie temperatury gruntu
-dTkz = 0;  %Zaklocenie temperatury dostarczanego powietrza
-dfp = 0;
+dTzew = 0;          %Zaklocenie temperatury zewnetrznej
+dTg = 10;            %Zaklocenie temperatury gruntu
+dTkz = 0;           %Zaklocenie temperatury dostarczanego powietrza
+dfp = 0;            %Zaklocenie przeplywu powietrza
 
 %% --------------------------
 % Start symulacji:
 sim('SimScript.slx');
+sim('Trans.slx');
 
 %% --------------------------
 % Wyswietlenie:
@@ -73,9 +105,32 @@ ylabel('Temperatura [{\circ} C]');
 title('Temperatura pokoju');
 
 subplot(2,1,2);
+hold on;
 plot(TimeOut,Tp);
 grid minor;
 hold on;
 xlabel('Czas [s]');
 ylabel('Temperatura [{\circ} C]');
 title('Temperatura piwnicy');
+
+subplot(2,1,1);
+grid minor;
+hold on;
+plot(TrTime,TrTwew, '--');
+xlabel('Czas [s]');
+ylabel('Temperatura [{\circ} C]');
+title('Temperatura pokoju');
+
+subplot(2,1,2);
+grid minor;
+hold on;
+plot(TrTime,TrTp);
+xlabel('Czas [s]');
+ylabel('Temperatura [{\circ} C]');
+title('Temperatura pokoju');
+
+subplot(2,1,1);
+legend('Nieliniowo', 'Transmitancja');
+
+subplot(2,1,2);
+legend('Nieliniowo', 'Transmitancja');
