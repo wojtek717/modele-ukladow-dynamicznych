@@ -48,9 +48,9 @@ CVp = cpp * rop * Vp;   %Pojemnosc cieplna piwnicy
 %% ===== Czesc II =====
 % Warunki początkowe:
 Tzew0 = TzewN;      %Poczatkawa temperetura zewnetrzna
-Tkz0 = TkzN;        %Poczatkowa temperatura dostarczanego powietrza
+Tkz0 = TkzN + 2;        %Poczatkowa temperatura dostarczanego powietrza
 Tg0 = TgN;          %Poczatkowa temperatura gruntu
-fp0 = fp;
+fp0 = fp * 0.8;
 
 Cp0 = cpp * rop * fp0;
 
@@ -76,6 +76,15 @@ L22 = [k1*kp];               %Tzew
 %L23 = [CVw*k2, k2*(Cp0+k1+k2)]; %Tg
 L23 = [CVw*k2 (k2*Cp0+k1*k2+k2*kp)];
 
+%% ==== ROWNANIA STANOW ====
+% Wartosci parametrow:
+A = [((-1 * Cp0) - k1 - kp)/CVw, kp/CVw; kp/CVp, (-kp-k2)/CVp];
+B = [Cp0/CVw, k1/CVw, 0; 0, 0, k2/CVp];
+C = [1, 0; 0, 1];
+D = [0, 0, 0; 0, 0, 0];
+
+E = [Twew0, Tp0];
+
 
 %% ==== SYMULACJA ====
 % Ustawienia zaklocen:
@@ -83,49 +92,70 @@ dt = 500;           %Czas wystapienia zaklocen
 
 dTzew = 0;          %Zaklocenie temperatury zewnetrznej
 dTg = 0;            %Zaklocenie temperatury gruntu
-dTkz = 0;           %Zaklocenie temperatury dostarczanego powietrza
-dfp = 0.1;            %Zaklocenie przeplywu powietrza
+dTkz = -2;           %Zaklocenie temperatury dostarczanego powietrza
+dfp = 0;            %Zaklocenie przeplywu powietrza
 
 %% --------------------------
 % Start symulacji:
 sim('SimScript.slx');
 sim('Trans.slx');
+sim('RStanu.slx');
 
 %% --------------------------
 % Wyswietlenie:
 figure(1);
 
-subplot(2,1,1);
-grid minor;
+%Nieliniowe:
+subplot(3,2,1);
 hold on;
 plot(TimeOut,Twew);
 xlabel('Czas [s]');
 ylabel('Temperatura [{\circ} C]');
-title('Temperatura pokoju');
+title('Temperatura pokoju - Nieliniowe');
+grid minor;
 
-subplot(2,1,2);
+subplot(3,2,2);
 hold on;
 plot(TimeOut,Tp);
-grid minor;
-hold on;
 xlabel('Czas [s]');
 ylabel('Temperatura [{\circ} C]');
-title('Temperatura piwnicy');
-
-subplot(2,1,1);
+title('Temperatura piwnicy - Nieliniowe');
 grid minor;
+
+%Transmitancje:
+subplot(3,2,3);
 hold on;
-plot(TrTime,TrTwew, '--');
-
-
-subplot(2,1,2);
+plot(TrTime,TrTwew);
+xlabel('Czas [s]');
+ylabel('Temperatura [{\circ} C]');
+title('Temperatura pokoju - Transmitancje');
 grid minor;
+
+subplot(3,2,4);
 hold on;
-plot(TrTime,TrTp, '--');
+plot(TrTime,TrTp);
+xlabel('Czas [s]');
+ylabel('Temperatura [{\circ} C]');
+title('Temperatura piwnicy - Transmitancje');
+grid minor;
+
+%Rownania stanu:
+subplot(3,2,5);
+hold on;
+plot(RTime, RTwew);
+xlabel('Czas [s]');
+ylabel('Temperatura [{\circ} C]');
+title('Temperatura pokoju - Rownania Stanu');
+grid minor;
+
+%Rownania stanu:
+subplot(3,2,6);
+hold on;
+plot(RTime, RTp);
+xlabel('Czas [s]');
+ylabel('Temperatura [{\circ} C]');
+title('Temperatura piwnicy - Rownania Stanu');
+grid minor;
 
 
-subplot(2,1,1);
-legend('Nieliniowo', 'Transmitancja');
 
-subplot(2,1,2);
-legend('Nieliniowo', 'Transmitancja');
